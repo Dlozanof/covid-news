@@ -28,16 +28,16 @@ if __name__ == "__main__":
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M")
 
-    # Grab new image
+    # Grab new image (https://grabz.it/)
     grabzIt.URLToImage("https://www.comunidad.madrid/servicios/salud/2019-nuevo-coronavirus", options)
     grabzIt.SaveTo("new_result.png")
 
     if (md5("new_result.png") == md5("result.png")):
         os.remove("new_result.png")
-        msg = "Sin novedades [{}]".format(dt_string)
-        telegram_send.send(messages=[msg])
+        msg = "{}\nSin novedades.".format(dt_string)
+        telegram_send.send(conf="covid.conf", messages=[msg])
     else:
         os.rename("new_result.png", "result.png")
         with open("result.png", "rb") as image:
             msg = "Novedades!"
-            telegram_send.send(messages=[msg], images=[image])
+            telegram_send.send(conf="covid.conf", messages=[msg], images=[image])
